@@ -20,11 +20,17 @@ class member{
 	{
 		return  array(
               
-              'account_name  '   => $this -> account_name,
-              'account_number  '    => $this -> account_num,
-              'account_amount  ' => $this -> account_amount
+              'account_name'   => $this -> account_name,
+              'account_number'    => $this -> account_num,
+              'account_amount' => $this -> account_amount
 		);
 	}
+
+	public function return_user_name($newname)
+	{
+		$this-> account_name = $newname;
+	}
+
 }
 
 
@@ -61,6 +67,48 @@ class officer{
 			return $user_info ;
 		}
 	}
+
+	function delete_user($ac_nu){
+		if(!count($this->members)){
+			return "no user found";
+		}
+		$c=0;
+		foreach($this->members as $key => $val){
+			$user=$this->members[$key]->return_user_data();
+			if($user['account_number']==$ac_nu){
+				unset($this->members[$key]);
+				$c++;
+			}
+		}	
+		if($c>0){
+			return "delete user success";
+			}
+		else{
+			return "user not found";
+			}
+	}
+	
+	
+	function edit_user($ac_nu,$name){
+		if(!count($this->members)){
+			return "no user found";
+		}
+		$c=0;
+		foreach($this->members as $key => $val){
+			$user=$this->members[$key]->return_user_data();
+			if($user['account_number']==$ac_nu){
+				$this->members[$key]->return_user_name($name);
+				$c++;
+			}
+		}	
+		if($c>0){
+			return "update  user success";
+			}
+		else{
+			return "user not found";
+			}
+	}
+	
 }
 
 $oj_oficer = new officer();
@@ -80,15 +128,94 @@ if (!is_array($result)) {
 
 } else {
 	
-	foreach ($result as $key1 => $value1) {
-		foreach ($value1 as $key2 => $value2) {
-			
-
-			echo $key2.'=>'.$value2.'<br>';
-		}
-		echo '<hr>';
-		
+	?>
+<table border="3" >
+<tr  style="color: red;">
+	<td># </td>
+    <td>name</td>
+    <td>account</td>
+    <td>amount</td>
+</tr>	
+	<?php
+    $i=1;
+	foreach($result as $val){
+			?>
+            <tr  style="color: blue;">
+            	<td><?php echo $i++; ?></td>
+                <td><?php echo $val['account_name']?></td>
+                <td><?php echo $val['account_number']?></td>
+                <td><?php echo $val['account_amount']?></td>
+            </tr>
+            <?php
 	}
+	echo '</table>';
+	}
+
+echo '<hr>';
+echo $oj_oficer->delete_user(101);
+
+
+$result=$oj_oficer->show_all_member();
+if(!is_array($result)){
+	echo $result;
 }
+else{ 
+
+?>
+<table border="1">
+<tr style="color: red;">
+	<td>#</td>
+    <td>name</td>
+    <td>account</td>
+    <td>amount</td>
+</tr>	
+	<?php
+    $i=1;
+	foreach($result as $val){
+			?>
+            <tr style="color: blue;">
+            	<td><?php echo $i++; ?></td>
+                <td><?php echo $val['account_name']?></td>
+                <td><?php echo $val['account_number']?></td>
+                <td><?php echo $val['account_amount']?></td>
+            </tr>
+            <?php
+	}
+	echo '</table>';
+	}
+	
+echo "<hr>";
+echo $oj_oficer->edit_user(104,"name_update");
+
+
+$result=$oj_oficer->show_all_member();
+if(!is_array($result)){
+	echo $result;
+}
+else{ 
+
+?>
+<table border="1">
+<tr style="color: red;">
+	<td>#</td>
+    <td>name</td>
+    <td>account</td>
+    <td>amount</td>
+</tr>	
+	<?php
+    $i=1;
+	foreach($result as $val){
+			?>
+            <tr style="color: blue;">
+            	<td><?php echo $i++; ?></td>
+                <td><?php echo $val['account_name']?></td>
+                <td><?php echo $val['account_number']?></td>
+                <td><?php echo $val['account_amount']?></td>
+            </tr>
+            <?php
+	}
+	echo '</table>';
+	}
+
 
  ?>
